@@ -60,3 +60,26 @@ export function getProject(req, res) {
     });
 }
 
+export function findProjectName(req, res) {
+  const {title} = req.params;
+  console.log(`Searching for: ${title} ....`)
+  return ProjectModel.find({$text: {$search: title}}, {score: {$meta: 'textScore'}})
+    .sort({score: {$meta: 'textScore'}})
+    .limit(10)
+    .then(result => res.json(result))
+    .catch((e) => {
+      console.log(`Error occurred searching for ${title}`)
+    });
+}
+
+export function findProjectDescription(req, res) {
+  const {description} = req.params;
+  console.log(`Searching for: ${description} ....`);
+  return ProjectModel.find({$text: {$search: description}}, {score: {$meta: 'textScore'}})
+    .sort({score: {$meta: 'textScore'}})
+    .limit(10)
+    .then(result => res.json(result))
+    .catch((e) => {
+      console.log(`Error occurred searching for ${description}`)
+    });
+}
